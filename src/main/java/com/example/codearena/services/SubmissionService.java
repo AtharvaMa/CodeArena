@@ -1,5 +1,6 @@
 package com.example.codearena.services;
 
+import com.example.codearena.dto.SubmissionRequestDto;
 import com.example.codearena.entity.Problem;
 import com.example.codearena.entity.Submission;
 import com.example.codearena.entity.User;
@@ -7,23 +8,26 @@ import com.example.codearena.entity.Verdict;
 import com.example.codearena.repository.ProblemRepo;
 import com.example.codearena.repository.SubmissionRepo;
 import com.example.codearena.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
-@lombok.RequiredArgsConstructor
+@RequiredArgsConstructor
 public class SubmissionService {
 
-    private final SubmissionRepo submissionRepository;
-    private final ProblemRepo problemRepository;
+    private final SubmissionRepo submissionRepo;
+    private final ProblemRepo problemRepo;
     private final UserRepository userRepository;
-    private final JudgeService judgeService;
 
-    public Submission submitCode(SubmissionRequest request, String username) {
-
-        User user = userRepository.findByUsername(username)
+    public Submission submitCode(SubmissionRequestDto request) {
+        // 🔥 Use the ID from the request instead of SecurityContextHolder
+        User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Problem problem = problemRepository.findById(request.getProblemId())
+        Problem problem = problemRepo.findById(request.getProblemId())
                 .orElseThrow(() -> new RuntimeException("Problem not found"));
 
         Submission submission = Submission.builder()
@@ -32,17 +36,9 @@ public class SubmissionService {
                 .verdict(Verdict.PENDING)
                 .user(user)
                 .problem(problem)
+                .submittedAt(LocalDateTime.now())
                 .build();
 
-        submission = submissionRepository.save(submission);
-
-        // Call judge
-        Verdict verdict = judgeService.evaluate(submission);
-
-        submission.setVerdict(verdict);
-
-        return submissionRepository.save(submission);
+        return submissionRepo.save(submission);
     }
-
-
 }

@@ -1,6 +1,7 @@
 package com.example.codearena.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -29,7 +30,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // 🔥 Replace @JsonIgnore with this
     @NotBlank
     @Column(nullable = false)
     private String password;
@@ -43,9 +44,11 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Builder.Default // 🔥 Add this
     @Column(nullable = false)
     private Integer rating = 0;
 
+    @Builder.Default // 🔥 Add this
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

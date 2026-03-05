@@ -1,5 +1,6 @@
 package com.example.codearena.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,14 +33,17 @@ public class Submission {
 
     private Integer memoryUsedMb;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "problem_id", nullable = false)
     private Problem problem;
 
+    @Builder.Default // 🔥 Add this
     @Column(nullable = false)
     private LocalDateTime submittedAt = LocalDateTime.now();
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -25,13 +27,16 @@ public class AuthController {
     public String register(@RequestBody User user) {
         System.out.println("REGISTER HIT");
 
-        user.setPassword(
-                passwordEncoder.encode(user.getPassword())
-        );
+        // 1. Hash the password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // 2. Set default values that aren't in the JSON payload
         user.setRole(Role.USER);
+        user.setRating(0);                              // 🔥 Add this to prevent 'rating cannot be null'
+        user.setCreatedAt(LocalDateTime.now());         // 🔥 Add this to fix the 'created_at' error
 
+        // 3. Save to database
         userRepository.save(user);
-
 
         return "User registered successfully";
     }

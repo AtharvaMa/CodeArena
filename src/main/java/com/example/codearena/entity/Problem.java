@@ -36,15 +36,18 @@ public class Problem {
 
     private String spaceComplexity;
 
+    @Builder.Default // 🔥 Add this
     @Column(nullable = false)
     private Integer timeLimitMs = 1000;
 
+    @Builder.Default // 🔥 Add this
     @Column(nullable = false)
     private Integer memoryLimitMb = 256;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL)
     private List<TestCase> testCases;
 
+    @Builder.Default // 🔥 Add this
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 }

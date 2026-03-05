@@ -1,5 +1,6 @@
 package com.example.codearena.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -25,9 +26,11 @@ public class TestCase {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String expectedOutput;
 
+    @Builder.Default // 🔥 Add this
     @Column(nullable = false)
     private Boolean hidden = true;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "problem_id", nullable = false)
     private Problem problem;
