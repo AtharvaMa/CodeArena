@@ -27,8 +27,8 @@ public class ExecutionService {
     private final String JDOODLE_URL = "https://api.jdoodle.com/v1/execute";
 
     // 🔥 Paste your JDoodle credentials here
-    private final String CLIENT_ID = "e602b4dd6b86febffddb82820750f066";
-    private final String CLIENT_SECRET = "bf044be48730c970793072cc1549244aeface90a03114bd549292d35cbedd346";
+    private final String CLIENT_ID = "CLIENT_ID";
+    private final String CLIENT_SECRET = "CLIENT_SECRET";
 
 
     public Submission executeSubmission(Long submissionId) {
