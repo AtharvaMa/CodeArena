@@ -49,7 +49,7 @@ public class SecurityConfig {
                         // 🔥 2. Explicitly allow OPTIONS requests for CORS pre-flight checks
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // 🔥 3. Temporarily open your submissions endpoint so React can test it
-                        .requestMatchers("/api/auth/**", "/error", "/submissions/**", "/api/submissions/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/error", "/submissions/**", "/api/submissions/**", "/api/problems/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex

@@ -44,28 +44,32 @@ public class ProblemService {
     public List<ProblemDto> getAllProblems() {
         List<Problem> problems = problemRepo.findAll();
 
-        return problems.stream().map(problem -> {
+        return problems.stream().map(this::toProblemDto).collect(Collectors.toList());
+    }
 
-            // 🔥 1. Filter out hidden test cases and convert to TestCaseDto
-            List<TestCaseDto> visibleTestCases = problem.getTestCases().stream()
-                    .filter(tc -> !tc.getHidden()) // Keep only if hidden is false
-                    .map(tc -> TestCaseDto.builder()
-                            .input(tc.getInputData())
-                            .output(tc.getExpectedOutput())
-                            .build())
-                    .collect(Collectors.toList());
+    public ProblemDto getProblemById(Long id) {
+        Problem problem = problemRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Problem not found with id: " + id));
+        return toProblemDto(problem);
+    }
 
-            // 🔥 2. Pack the safe data into a ProblemDto
-            return ProblemDto.builder()
-                    .id(problem.getId())
-                    .title(problem.getTitle())
-                    .description(problem.getDescription())
-                    .difficulty(problem.getDifficulty().name())
-                    .timeComplexity(problem.getTimeComplexity())
-                    .spaceComplexity(problem.getSpaceComplexity())
-                    .testCases(visibleTestCases) // Only the safe test cases are attached!
-                    .build();
+    private ProblemDto toProblemDto(Problem problem) {
+        List<TestCaseDto> visibleTestCases = problem.getTestCases().stream()
+                .filter(tc -> !tc.getHidden())
+                .map(tc -> TestCaseDto.builder()
+                        .input(tc.getInputData())
+                        .output(tc.getExpectedOutput())
+                        .build())
+                .collect(Collectors.toList());
 
-        }).collect(Collectors.toList());
+        return ProblemDto.builder()
+                .id(problem.getId())
+                .title(problem.getTitle())
+                .description(problem.getDescription())
+                .difficulty(problem.getDifficulty().name())
+                .timeComplexity(problem.getTimeComplexity())
+                .spaceComplexity(problem.getSpaceComplexity())
+                .testCases(visibleTestCases)
+                .build();
     }
 }

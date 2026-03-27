@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/problems")
+@CrossOrigin(origins = "http://localhost:5173")
 @RequiredArgsConstructor
 public class ProblemController {
 
@@ -25,5 +26,11 @@ public class ProblemController {
     @GetMapping
     public ResponseEntity<List<ProblemDto>> getAllProblems() {
         return ResponseEntity.ok(problemService.getAllProblems());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProblemDto> getProblemById(@PathVariable Long id) {
+        ProblemDto problem = problemService.getProblemById(id);
+        return ResponseEntity.ok(problem);
     }
 }
